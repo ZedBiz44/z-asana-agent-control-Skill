@@ -7,7 +7,7 @@ Date: 2026-08-27 MST | Tester: Unassigned | Status: Planned
 | Field | Record |
 | --- | --- |
 | Skill identifier | `z-asana-agent-control` |
-| Repository and commit or release | `https://github.com/ZedBiz44/z-asana-agent-control-Skill`; commit pending first publication. |
+| Repository and commit or release | `https://github.com/ZedBiz44/z-asana-agent-control-Skill`; initial source publication `1b27cdc49cedba1aeca36a137e2607071d86a11f`. |
 | Deployable package path | `dist/z-asana-agent-control/` |
 | Platform and version | OpenClaw-compatible runtime and version to be recorded at pilot. |
 | Pilot agent or environment | Unassigned. Select one controlled, non-production-critical agent or approved test environment. |
