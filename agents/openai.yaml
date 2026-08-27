@@ -1,0 +1,7 @@
+interface:
+  display_name: "Z Asana Agent Control"
+  short_description: "Verify safe agent-owned Asana work"
+  default_prompt: "Use $z-asana-agent-control before performing agent-owned Asana work, verify the PAT-MCP identity, and stay within the approved task boundary."
+
+policy:
+  allow_implicit_invocation: true
