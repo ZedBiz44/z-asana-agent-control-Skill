@@ -69,6 +69,6 @@ Date: 2026-08-27 MST | Prepared by: Manus | Status: Release Candidate | Pilot Pe
 | Trigger-test record | `governance/pilot-test-record.md`, planned. |
 | Pilot result | Pending. |
 | Deployed commit or release | Initial source publication: `1b27cdc49cedba1aeca36a137e2607071d86a11f`. No runtime deployment has occurred. |
-| GitHub issue or change record | Create during task closeout. |
-| Notion operational summary | SOP entry in the AI-Agent-Skills-SOPs database, planned. |
+| GitHub issue or change record | [Issue #1](https://github.com/ZedBiz44/z-asana-agent-control-Skill/issues/1). |
+| Notion operational summary | [Z Asana Agent Control SOP](https://app.notion.com/p/3c9a3e33d58181fab8a5c2a180b648af). |
 | Final approver and date | Pending. |

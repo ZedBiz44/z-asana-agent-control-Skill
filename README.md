@@ -16,7 +16,7 @@ Do not use a Jack-authenticated Codex, ChatGPT, browser session, or any personal
 
 ## Authoritative Files and Package
 
-`SKILL.md` is the authoritative runtime instruction set. `agents/openai.yaml` contains discovery metadata for an OpenAI-compatible runtime. The `governance/` directory holds the implementation profile, security and rollback review, and pilot test record for this Fleet-class skill.
+`SKILL.md` is the authoritative runtime instruction set. `agents/openai.yaml` contains discovery metadata for an OpenAI-compatible runtime. The `governance/` directory holds the implementation profile, security and rollback review, and pilot test record for this Fleet-class skill. The human-readable [operational SOP](https://app.notion.com/p/3c9a3e33d58181fab8a5c2a180b648af) is maintained in Notion and does not replace the GitHub source.
 
 The committed `dist/z-asana-agent-control/` directory is the deployable package. It is derived from the root `SKILL.md` plus the runtime resources named in `package-resources.txt`; it must remain content-equivalent to the source at the documented release commit. The authoring repository, rather than the deployed package, is the source of truth.
 
