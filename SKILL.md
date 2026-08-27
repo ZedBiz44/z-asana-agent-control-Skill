@@ -28,6 +28,12 @@ Confirm all of the following before task work:
 
 Stop if any required value is missing, the MCP is unavailable, the tool route is unknown, or the route uses a personal identity. Do not guess identifiers or credentials.
 
+## Required MCP Capabilities
+
+Before accepting the requested work, confirm that the approved route exposes a current-user check, assigned-task discovery, task read, task comment, and the exact update or completion action requested. Confirm search or typeahead is available for any named object. For team or portfolio questions, confirm the corresponding read-only navigation tools are available.
+
+If the requested capability is absent, stop and report the missing approved capability. Do not substitute a personal connector, unapproved direct REST, or a guessed endpoint.
+
 ## Preflight Identity and Route
 
 - Identify the active Asana tool server and confirm it is the approved PAT-backed MCP route.
