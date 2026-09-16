@@ -1,6 +1,6 @@
 ---
 name: z-asana-agent-control
-description: Control daily ZedBiz agent work in Asana. Use for PAT-MCP identity checks, assigned-task updates, and read-only team or portfolio navigation.
+description: Do agent-owned Asana work through PAT MCP; save task activity to external memory and recall prior work across chats, including email-triggered tasks.
 ---
 
 # Z Asana Agent Control
@@ -10,6 +10,8 @@ description: Control daily ZedBiz agent work in Asana. Use for PAT-MCP identity 
 Use for day-to-day Asana work owned by a ZedBiz AI agent, including assigned-task discovery, task reading, evidence-based progress comments, completing finished work, and read-only team or portfolio navigation required by that work.
 
 Use the agent's approved PAT-backed Asana MCP only. Apply this Skill before any Asana query or update.
+
+Also use this Skill when an email or background job starts Asana work, or when someone asks what you did, why you did it, or what you are working on in Asana. Read this Skill in that run; a separate chat's earlier skill load does not count.
 
 ## Do Not Use This Skill
 
@@ -84,6 +86,7 @@ When custom fields are required, enumerate the available fields first. Use field
 ## Execute the Assigned Work
 
 - Add a short `Starting work` comment when beginning material work.
+- Save a compact `In progress` activity record to the active external memory provider using the rules below. Save important progress, changed plans, and blockers when they occur.
 - Move or set the task to `In Progress` only when the project already uses that status and the change is within the approved action boundary.
 - Keep comments concise, factual, and tied to the expected outcome.
 - Use valid `html_notes` or `html_text` only when rich text is necessary.
@@ -104,8 +107,34 @@ Before completing a task:
 - Add a final comment with the result and proof or relevant links.
 - Create or explicitly identify needed follow-up work without duplicating an existing task.
 - Complete the assigned task only after all prior checks pass.
+- Read back the actual task status, then save and verify the final external-memory activity record. Do not record `Complete` before Asana confirms completion.
 
 Record enough evidence to show the approved identity, intended task, action taken, test or result, and completion status. Keep secrets, private PAT values, and unnecessary personal data out of Asana comments, prompts, Notion, GitHub, and logs.
+
+## Save Task Activity to External Memory
+
+This is a required explicit tool action, including in email-triggered, scheduled, and background sessions. An Asana comment, final chat reply, local daily note, or automatic conversation capture is not a substitute.
+
+- Use the agent's existing active external memory provider. Follow [provider routing and verification](references/task-memory.md); do not install or reconfigure a provider for this step.
+- Save when substantial work begins, the status or next action materially changes, work is blocked, or work finishes. Do not save every lookup, empty task check, trivial comment, or repeated notification.
+- Include the owning agent's name, task GID and link, what was requested and why (only if known), actions actually taken, current status, output/evidence links, timestamp with timezone, and next action or blocker.
+- Use an existing task record or a stable agent/task/event identifier where supported. Search before retrying a save whose outcome is uncertain. Keep records concise and within the provider's size limit.
+- Verify the write response and read the matching record back. For asynchronous saves, confirm processing completed or the record became available; an accepted queue item alone is not a completed save.
+- Use the same approved task-memory scope that the owning agent's normal chats search. The internal worker name `mail_reader` is not the business agent's identity. Do not claim cross-channel recall merely because a write succeeded in a worker-only scope.
+- If saving or routing fails, report `Task work: <actual status>; external memory: not confirmed — <reason>`. Preserve a compact recovery note in the existing approved task evidence or local runtime notes. Retry only the memory step within the normal retry limit; never repeat completed business actions or reopen a finished task just because memory failed.
+- Do not publish new Notion/GitHub documents solely to replace a missing activity-memory save. Existing requirements for those systems still apply when the assignment calls for them.
+
+Example record shape (replace every value with observed facts):
+
+`Agent: <owner> | Asana: <GID and URL> | Requested: <short instruction/reason> | Action: <work actually done> | Status: <in progress/blocked/complete> | Evidence: <output URLs> | Updated: <ISO timestamp with offset> | Next: <action or none>`
+
+## Recall Previous Asana Work
+
+- Before explaining past work or resuming a task, search external memory using the task GID and owning agent. If the GID is unknown, use the task title, output title/link, and relevant date to identify candidates.
+- Confirm task identity, agent ownership, timestamps, and output links. A similar task by another agent in a shared bank is not evidence that you did the work.
+- Use the approved Asana MCP identity preflight before checking live task details, comments, or current status. Memory is historical context; the live task and verified outputs settle current facts.
+- When recall is empty, inspect the specific task and permitted execution history. Do not conclude that no work occurred, or invent a reason for it. Say what is verified and what remains unknown.
+- If you recover a missing material activity record, save a clearly labelled retrospective entry with the original work time when known and the current recording time. Do not invent missing details or duplicate a matching record.
 
 ## Recurring Checks and Failures
 
@@ -117,4 +146,4 @@ Stop after three failed attempts or earlier when the error indicates identity, a
 
 ## Final Verification
 
-Confirm that the approved PAT MCP was used, the authenticated identity and workspace matched, all objects were resolved to GIDs, the action stayed within the allowed level, evidence was added, and no credentials or restricted changes were exposed or made.
+Confirm that the approved PAT MCP was used, the authenticated identity and workspace matched, all objects were resolved to GIDs, the action stayed within the allowed level, evidence was added, and no credentials or restricted changes were exposed or made. For material work, report the actual task outcome and whether its external-memory record was verified in the owning agent's approved scope; never hide a failed save behind a successful task result.
