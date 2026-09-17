@@ -1,6 +1,6 @@
 ---
 name: z-asana-agent-control
-description: Govern daily Asana work, verify acting identity and task authority, record progress, and recall prior work across approved runtimes.
+description: "Do routine ZedBiz Asana work through the runtime's approved connection: ChatGPT's connected Asana plugin or an OpenClaw agent's PAT-backed MCP. Verify the applicable identity, task boundary, evidence, and completion."
 ---
 
 # Z Asana Agent Control
@@ -9,52 +9,55 @@ description: Govern daily Asana work, verify acting identity and task authority,
 
 Use for day-to-day Asana work owned by a ZedBiz AI agent, including assigned-task discovery, task reading, evidence-based progress comments, completing finished work, and read-only team or portfolio navigation required by that work.
 
-Apply this Skill before any Asana query or update. Select the acting authority below before choosing credentials.
+Apply this Skill before any Asana query or update. Use the approved route for the runtime:
+
+- **ChatGPT/Codex:** use the connected Asana plugin. A connection authenticated as Jack is expected and approved when Jack asks ChatGPT to inspect or change Asana within the current request.
+- **OpenClaw team agent:** use that agent's approved PAT-backed Asana MCP. Do not substitute Jack's ChatGPT connection or another agent's identity.
 
 Also use this Skill when an email or background job starts Asana work, or when someone asks what you did, why you did it, or what you are working on in Asana. Read this Skill in that run; a separate chat's earlier skill load does not count.
-
-## Select the acting authority
-- For work owned by an OpenClaw/Hermes agent, an agent inbox, a background worker, or an explicitly assigned agent identity, use that agent's PAT-backed MCP. All agent identity and memory requirements below apply.
-- For a direct request from the signed-in user in ChatGPT/Codex, use the approved connected Asana account only for the work that user authorizes. Read [native user-authorized work](references/chatgpt-codex.md). Never represent this as another agent acting under its own identity.
-- If the intended authority is unclear, resolve that question before mutation. Do not use the personal route as a fallback for failed agent authentication.
 
 ## Do Not Use This Skill
 
 Do not use for project setup, project briefs or status updates, workflow redesign, portfolio changes, timeline-wide changes, custom-field administration, team-membership changes, bulk updates, deletes, or other structural Asana administration. Route those requests to `z-advanced-asana-control` and obtain the required approval.
 
-Do not use a Jack-authenticated Codex, ChatGPT, browser, or other personal Asana connection for agent-owned work.
+Do not use ChatGPT's Asana plugin to impersonate an OpenClaw team agent or claim that agent performed the work. Do not use browser automation or direct REST when the approved runtime route is available.
 
 ## Required Context
 
-For agent-owned work, confirm all of the following before task work. For direct user-authorized work, use the native adapter's identity preflight:
+Confirm the runtime and its required context before task work:
 
-- Agent name.
-- Approved agent email and Asana user GID.
-- Approved Asana workspace GID.
-- Approved PAT-backed Asana MCP server.
+- **ChatGPT/Codex:** connected Asana plugin, connected workspace/account identity when exposed, requested project or task, and required capabilities.
+- **OpenClaw:** agent name, approved agent email and user GID, approved workspace GID, and approved PAT-backed Asana MCP server.
 
-For that agent-owned branch, stop if any required value is missing, the MCP is unavailable, the tool route is unknown, or the route uses a personal identity. Do not guess identifiers or credentials.
+Stop if the applicable route is unavailable, the required workspace or target cannot be verified, or the runtime is trying to use the other runtime's authority. Do not guess identifiers or credentials.
 
 ## Required MCP Capabilities
 
-Before accepting the requested work, confirm that the approved route exposes a current-user check, assigned-task discovery, task read, task comment, and the exact update or completion action requested. Confirm search or typeahead is available for any named object. For team or portfolio questions, confirm the corresponding read-only navigation tools are available.
+Before accepting the requested work, inspect the approved route's exposed tools. Confirm the exact reads and writes required by the request. For OpenClaw assigned-task execution, also confirm current-user and assigned-task discovery. Confirm search or typeahead for named objects when available; otherwise use exact links or IDs supplied by the user and read them back.
 
-If the requested capability is absent, stop and report the missing approved capability. Do not substitute a personal connector, unapproved direct REST, or a guessed endpoint.
+If the requested capability is absent, stop and report it. Do not substitute browser automation, unapproved direct REST, the other runtime's connection, or a guessed endpoint.
 
-## Preflight Identity and Route for Agent-Owned Work
+## Preflight Identity and Route
 
-- Identify the active Asana tool server and confirm it is the approved PAT-backed MCP route.
-- Call `asana_get_user` with `user_gid: "me"`, or the current-user equivalent exposed by the approved server.
-- Continue only when the returned email equals the approved agent email and the returned workspace list includes the approved workspace GID.
-- Record the authenticated email, user GID, workspace GID, and approved MCP route in the task work note or completion evidence. Never record a PAT.
+For **ChatGPT/Codex**:
 
-If a Codex or ChatGPT Asana connection returns Jack or another person, treat it as the wrong route. Continue looking for the approved agent PAT route, then stop if it is unavailable.
+- Use the connected Asana plugin selected for the session.
+- Read the connected account/workspace identity when the plugin exposes it. A Jack-authenticated connection is valid for Jack's request.
+- Use supplied Asana links or exact IDs to resolve targets. Confirm the project/task belongs to the intended workspace before writing.
+- Record that ChatGPT used the connected Asana plugin; do not claim an OpenClaw agent identity.
 
-Use this failure message when the authority check fails:
+For an **OpenClaw team agent**:
 
-> Asana work stopped. Expected the approved agent identity and workspace through the approved PAT MCP, but a different identity, workspace, or route was returned. Fix the approved Asana MCP before task execution continues.
+- Confirm the active server is that agent's approved PAT-backed Asana MCP.
+- Call `asana_get_user` with `user_gid: "me"`, or the exposed current-user equivalent.
+- Continue only when the returned email, user GID, and workspace match the approved agent configuration.
+- Record the authenticated agent identity, workspace, and route in the work evidence. Never record a PAT.
 
-A real, read-only current-user call is the authoritative connectivity check. For a Streamable HTTP deployment, a successful `/healthz` check may supplement, but never replace, that identity check. Do not treat a legacy SSE probe returning HTTP 400 as proof that an otherwise working Streamable HTTP route is unusable.
+Use this failure message when the applicable authority check fails:
+
+> Asana work stopped. The connected runtime route, identity, workspace, or requested target could not be verified. Fix the applicable ChatGPT Asana connection or OpenClaw agent MCP before execution continues.
+
+For OpenClaw Streamable HTTP deployments, a successful `/healthz` check may supplement but never replace the identity read. Do not treat a legacy SSE probe returning HTTP 400 as proof that an otherwise working Streamable HTTP route is unusable.
 
 ## Resolve Objects Safely
 
@@ -74,7 +77,7 @@ For a team question, resolve the team first and pass its GID to the team-project
 - Do not browse the entire workspace unless the assigned task clearly requires a wider, approved search.
 - Prioritize urgent or high-priority work, work blocking other agents, near-due items, then older actionable work.
 - Before starting, inspect dependencies and blockers. Skip blocked work unless asked to diagnose the blocker.
-- Do not use a generic “My Tasks” view unless the identity preflight passed for this exact agent.
+- Do not use a generic “My Tasks” view unless the applicable connected identity is known. Prefer the exact project/task supplied by Jack for ChatGPT work.
 - Do not duplicate work already active by another person or agent unless directly assigned or explicitly directed to continue.
 
 ## Action Boundaries
@@ -114,11 +117,11 @@ Before completing a task:
 - Complete the assigned task only after all prior checks pass.
 - Read back the actual task status, then save and verify the final external-memory activity record. Do not record `Complete` before Asana confirms completion.
 
-Record enough evidence to show the approved identity, intended task, action taken, test or result, and completion status. Keep secrets, private PAT values, and unnecessary personal data out of Asana comments, prompts, Notion, GitHub, and logs.
+Record enough evidence to show the runtime route, intended task, action taken, test or result, and completion status. Keep secrets, private PAT values, and unnecessary personal data out of Asana comments, prompts, Notion, GitHub, and logs.
 
 ## Save Task Activity to External Memory
 
-For agent-owned work, this is a required explicit tool action, including in email-triggered, scheduled, and background sessions. For direct user-authorized ChatGPT/Codex work, follow the native adapter and the host's memory permissions. An Asana comment, final chat reply, local daily note, or automatic conversation capture is not a substitute.
+This is a required explicit tool action, including in email-triggered, scheduled, and background sessions. An Asana comment, final chat reply, local daily note, or automatic conversation capture is not a substitute.
 
 - Use the agent's existing active external memory provider. Follow [provider routing and verification](references/task-memory.md); do not install or reconfigure a provider for this step.
 - Save when substantial work begins, the status or next action materially changes, work is blocked, or work finishes. Do not save every lookup, empty task check, trivial comment, or repeated notification.
@@ -137,7 +140,7 @@ Example record shape (replace every value with observed facts):
 
 - Before explaining past work or resuming a task, search external memory using the task GID and owning agent. If the GID is unknown, use the task title, output title/link, and relevant date to identify candidates.
 - Confirm task identity, agent ownership, timestamps, and output links. A similar task by another agent in a shared bank is not evidence that you did the work.
-- Use the approved Asana MCP identity preflight before checking live task details, comments, or current status. Memory is historical context; the live task and verified outputs settle current facts.
+- Use the applicable ChatGPT-plugin or OpenClaw-MCP preflight before checking live task details, comments, or current status. Memory is historical context; the live task and verified outputs settle current facts.
 - When recall is empty, inspect the specific task and permitted execution history. Do not conclude that no work occurred, or invent a reason for it. Say what is verified and what remains unknown.
 - If you recover a missing material activity record, save a clearly labelled retrospective entry with the original work time when known and the current recording time. Do not invent missing details or duplicate a matching record.
 
@@ -145,10 +148,10 @@ Example record shape (replace every value with observed facts):
 
 For recurring agents, use event or sync-token discovery when the approved route supports it. Store sync tokens only in approved runtime state, never in prompts, comments, Notion, GitHub, or the Skill.
 
-If a tool call fails, check the approved route, identity, workspace, GID resolution, MCP registration, token injection, permissions, and rate limits. Do not fall back to `notion-rest` or direct Asana REST for normal task execution. For agent-owned work, direct REST is diagnosis-only, requires Jack's approval, and must use the same approved agent authority.
+If a tool call fails, check the applicable route, identity, workspace, GID resolution, plugin/MCP registration, OpenClaw token injection when applicable, permissions, and rate limits. Do not fall back to `notion-rest` or direct Asana REST for normal task execution. Direct REST is diagnosis-only, requires Jack's approval, and must use the same authorized runtime identity.
 
 Stop after three failed attempts or earlier when the error indicates identity, authorization, permission, or scope failure. Report the observed error, attempted safe checks, current stop condition, and decision required.
 
 ## Final Verification
 
-Confirm that the approved route for the selected authority was used, the authenticated identity and workspace matched, all objects were resolved to GIDs, the action stayed within the allowed level, evidence was added, and no credentials or restricted changes were exposed or made. For material work, report the actual task outcome and whether its external-memory record was verified in the owning agent's approved scope; never hide a failed save behind a successful task result.
+Confirm that ChatGPT used its connected Asana plugin or the OpenClaw agent used its approved PAT MCP, the applicable identity/workspace/target matched, all objects were resolved, the action stayed within the allowed level, evidence was added, and no credentials or restricted changes were exposed or made. For OpenClaw material work, report whether the external-memory record was verified in the owning agent's approved scope; never hide a failed save behind a successful task result.
