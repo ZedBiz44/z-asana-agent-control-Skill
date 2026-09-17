@@ -9,12 +9,14 @@ description: Govern routine Asana work through verified user or agent access, ch
 
 Use for direct user-authorized Asana work or day-to-day work owned by a ZedBiz AI agent, including assigned-task discovery, task reading, evidence-based progress comments, completing finished work, and read-only team or portfolio navigation required by that work.
 
-Apply this Skill before any Asana query or update. Use the approved route for the runtime:
+Apply this Skill to each new Asana work session. Read it once and complete one identity/workspace preflight before that session's first Asana action. Reuse the verified identity during the session; repeat preflight after a reconnect, route/account change or authority uncertainty. Do not reload the skill or repeat the same preflight before every task read. Use the approved route for the runtime:
 
 - **ChatGPT/Codex:** use the connected Asana plugin. A connection authenticated as Jack is expected and approved when Jack asks ChatGPT to inspect or change Asana within the current request.
 - **OpenClaw or Hermes agent:** use that agent's approved PAT-backed Asana MCP. Do not substitute Jack's ChatGPT connection or another agent's identity.
 
 Also use this Skill when an email or background job starts Asana work, or when someone asks what you did, why you did it, or what you are working on in Asana. Read this Skill in that run; a separate chat's earlier skill load does not count.
+
+Use `z-asana-procedures` for project/task setup, assignment readiness, execution checkpoints and review routing. Procedures coordinates the workflow; this control verifies authority and task actions.
 
 ## Do Not Use This Skill
 
@@ -151,7 +153,7 @@ For recurring agents, use event or sync-token discovery when the approved route 
 
 If a tool call fails, check the applicable route, identity, workspace, GID resolution, plugin/MCP registration, OpenClaw token injection when applicable, permissions, and rate limits. Do not fall back to `notion-rest` or direct Asana REST for normal task execution. Direct REST is diagnosis-only, requires Jack's approval, and must use the same authorized runtime identity.
 
-Stop after three failed attempts or earlier when the error indicates identity, authorization, permission, or scope failure. Report the observed error, attempted safe checks, current stop condition, and decision required.
+Stop the affected operation after three failed attempts. Stop all actions through an unverified route immediately for identity, authorization, permission or scope failure. An isolated held file, failed viewer, reporting outage or memory error does not stop unrelated authorized work whose safety and access remain verified. An unsafe classification pattern stops expansion of that pattern until corrected. Preserve uncertain writes for read-back before retrying; report the failed operation, stop scope, evidence and owner.
 
 ## Final Verification
 
