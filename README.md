@@ -1,12 +1,12 @@
 # Z Asana Agent Control Skill
 
-This repository is the authoritative GitHub source for `z-asana-agent-control`, the regular-workflow guardrail for ZedBiz AI agents using Asana. It ensures day-to-day task work uses the correct PAT-backed agent identity, resolves object GIDs safely, and keeps structural administration outside the regular task path.
+This repository is the authoritative GitHub source for `z-asana-agent-control`, the regular-workflow guardrail for ZedBiz AI agents using Asana. It ensures day-to-day task work uses the correct user-authorized connection or PAT-backed agent identity, resolves object GIDs safely, and keeps structural administration outside the regular task path.
 
 ## When to Use
 
 Use this Skill before an AI agent reads or performs ordinary work on its own assigned Asana tasks. Appropriate requests include finding the agent's assigned incomplete work, reading task context, posting evidence-based progress, updating a directly assigned task, completing verified work, and read-only navigation of teams or portfolios needed to answer an assigned-task question.
 
-The Skill applies the agent's approved PAT-backed Asana MCP identity check before any work. It supports both Get-er-Done Mode and Diagnose Mode, while preserving their distinct authorization rules.
+The Skill checks the selected user or agent account before work. It supports both Get-er-Done Mode and Diagnose Mode, while preserving their distinct authorization rules.
 
 ## Do Not Use
 
@@ -35,3 +35,9 @@ Confirm the source and deployable `SKILL.md` files are identical, then install o
 The Skill reads and can update private Asana data through an approved agent PAT route. It therefore requires the preflight identity and workspace checks, GID resolution, narrow assigned-task scope, explicit action levels, and stop conditions documented in `SKILL.md`.
 
 Risky task changes require an explicit task instruction, clear work necessity, or Jack's approval. Destructive, structural, bulk, portfolio, project, and production-impacting administration remains restricted until routed through the advanced control Skill with human approval. Roll back a failed pilot by removing the deployed package or restoring the last known-good package, then capture the evidence in the governance records.
+
+## Shared ChatGPT, Cody and agent instructions
+
+Direct user-authorized ChatGPT/Cody work uses the verified connected account. Work owned by an OpenClaw/Hermes agent uses its approved agent connection. The current SKILL.md governs this distinction. No new connection or memory service is installed by this package.
+
+The deployable package includes SKILL.md and every directory listed in package-resources.txt, including agents/openai.yaml. Rebuild it from this source before installing; do not install an old committed dist entry in isolation. Source and generated dist files must match. See the 2026-09-17 follow-up record in z-ai-skill-developer-Skill for Cody verification and separate ChatGPT status.
