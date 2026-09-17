@@ -1,6 +1,6 @@
 ---
 name: z-asana-agent-control
-description: Do agent-owned Asana work through PAT MCP; save task activity to external memory and recall prior work across chats, including email-triggered tasks.
+description: Govern daily Asana work, verify acting identity and task authority, record progress, and recall prior work across approved runtimes.
 ---
 
 # Z Asana Agent Control
@@ -9,9 +9,14 @@ description: Do agent-owned Asana work through PAT MCP; save task activity to ex
 
 Use for day-to-day Asana work owned by a ZedBiz AI agent, including assigned-task discovery, task reading, evidence-based progress comments, completing finished work, and read-only team or portfolio navigation required by that work.
 
-Use the agent's approved PAT-backed Asana MCP only. Apply this Skill before any Asana query or update.
+Apply this Skill before any Asana query or update. Select the acting authority below before choosing credentials.
 
 Also use this Skill when an email or background job starts Asana work, or when someone asks what you did, why you did it, or what you are working on in Asana. Read this Skill in that run; a separate chat's earlier skill load does not count.
+
+## Select the acting authority
+- For work owned by an OpenClaw/Hermes agent, an agent inbox, a background worker, or an explicitly assigned agent identity, use that agent's PAT-backed MCP. All agent identity and memory requirements below apply.
+- For a direct request from the signed-in user in ChatGPT/Codex, use the approved connected Asana account only for the work that user authorizes. Read [native user-authorized work](references/chatgpt-codex.md). Never represent this as another agent acting under its own identity.
+- If the intended authority is unclear, resolve that question before mutation. Do not use the personal route as a fallback for failed agent authentication.
 
 ## Do Not Use This Skill
 
@@ -21,14 +26,14 @@ Do not use a Jack-authenticated Codex, ChatGPT, browser, or other personal Asana
 
 ## Required Context
 
-Confirm all of the following before task work:
+For agent-owned work, confirm all of the following before task work. For direct user-authorized work, use the native adapter's identity preflight:
 
 - Agent name.
 - Approved agent email and Asana user GID.
 - Approved Asana workspace GID.
 - Approved PAT-backed Asana MCP server.
 
-Stop if any required value is missing, the MCP is unavailable, the tool route is unknown, or the route uses a personal identity. Do not guess identifiers or credentials.
+For that agent-owned branch, stop if any required value is missing, the MCP is unavailable, the tool route is unknown, or the route uses a personal identity. Do not guess identifiers or credentials.
 
 ## Required MCP Capabilities
 
@@ -36,7 +41,7 @@ Before accepting the requested work, confirm that the approved route exposes a c
 
 If the requested capability is absent, stop and report the missing approved capability. Do not substitute a personal connector, unapproved direct REST, or a guessed endpoint.
 
-## Preflight Identity and Route
+## Preflight Identity and Route for Agent-Owned Work
 
 - Identify the active Asana tool server and confirm it is the approved PAT-backed MCP route.
 - Call `asana_get_user` with `user_gid: "me"`, or the current-user equivalent exposed by the approved server.
@@ -113,7 +118,7 @@ Record enough evidence to show the approved identity, intended task, action take
 
 ## Save Task Activity to External Memory
 
-This is a required explicit tool action, including in email-triggered, scheduled, and background sessions. An Asana comment, final chat reply, local daily note, or automatic conversation capture is not a substitute.
+For agent-owned work, this is a required explicit tool action, including in email-triggered, scheduled, and background sessions. For direct user-authorized ChatGPT/Codex work, follow the native adapter and the host's memory permissions. An Asana comment, final chat reply, local daily note, or automatic conversation capture is not a substitute.
 
 - Use the agent's existing active external memory provider. Follow [provider routing and verification](references/task-memory.md); do not install or reconfigure a provider for this step.
 - Save when substantial work begins, the status or next action materially changes, work is blocked, or work finishes. Do not save every lookup, empty task check, trivial comment, or repeated notification.
@@ -140,10 +145,10 @@ Example record shape (replace every value with observed facts):
 
 For recurring agents, use event or sync-token discovery when the approved route supports it. Store sync tokens only in approved runtime state, never in prompts, comments, Notion, GitHub, or the Skill.
 
-If a tool call fails, check the approved route, identity, workspace, GID resolution, MCP registration, token injection, permissions, and rate limits. Do not fall back to `notion-rest` or direct Asana REST for normal task execution. Direct REST is diagnosis-only, requires Jack's approval, and must use the same approved agent authority.
+If a tool call fails, check the approved route, identity, workspace, GID resolution, MCP registration, token injection, permissions, and rate limits. Do not fall back to `notion-rest` or direct Asana REST for normal task execution. For agent-owned work, direct REST is diagnosis-only, requires Jack's approval, and must use the same approved agent authority.
 
 Stop after three failed attempts or earlier when the error indicates identity, authorization, permission, or scope failure. Report the observed error, attempted safe checks, current stop condition, and decision required.
 
 ## Final Verification
 
-Confirm that the approved PAT MCP was used, the authenticated identity and workspace matched, all objects were resolved to GIDs, the action stayed within the allowed level, evidence was added, and no credentials or restricted changes were exposed or made. For material work, report the actual task outcome and whether its external-memory record was verified in the owning agent's approved scope; never hide a failed save behind a successful task result.
+Confirm that the approved route for the selected authority was used, the authenticated identity and workspace matched, all objects were resolved to GIDs, the action stayed within the allowed level, evidence was added, and no credentials or restricted changes were exposed or made. For material work, report the actual task outcome and whether its external-memory record was verified in the owning agent's approved scope; never hide a failed save behind a successful task result.
