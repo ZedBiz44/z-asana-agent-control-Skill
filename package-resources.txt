@@ -1,3 +1,2 @@
-# Runtime directories included in dist/z-asana-agent-control/
 agents
 references

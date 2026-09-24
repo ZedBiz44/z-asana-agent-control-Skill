@@ -9,7 +9,7 @@ description: Govern routine Asana work through verified user or agent access, ch
 
 Use for direct user-authorized Asana work or day-to-day work owned by a ZedBiz AI agent, including assigned-task discovery, task reading, evidence-based progress comments, completing finished work, and read-only team or portfolio navigation required by that work.
 
-Apply this Skill to each new Asana work session. Read it once and complete one identity/workspace preflight before that session's first Asana action. Reuse the verified identity during the session; repeat preflight after a reconnect, route/account change or authority uncertainty. Do not reload the skill or repeat the same preflight before every task read. Use the approved route for the runtime:
+For assigned-task execution, read this skill once per new work session and verify identity/workspace before the first Asana action. Reuse that verification; repeat it after reconnect, route/account change, or authority uncertainty. Do not reload the skill or repeat preflight for every task read. For project setup and structural work, use `z-advanced-asana-control` for authority and `z-asana-procedures` for construction quality; do not load this entire execution workflow just for identity checks. The same runtime identity boundary applies in both control skills:
 
 - **ChatGPT/Codex:** use the connected Asana plugin. A connection authenticated as Jack is expected and approved when Jack asks ChatGPT to inspect or change Asana within the current request.
 - **OpenClaw or Hermes agent:** use that agent's approved PAT-backed Asana MCP. Do not substitute Jack's ChatGPT connection or another agent's identity.
@@ -20,7 +20,7 @@ Use `z-asana-procedures` for project/task setup, assignment readiness, execution
 
 ## Do Not Use This Skill
 
-Do not use for project setup, project briefs or status updates, workflow redesign, portfolio changes, timeline-wide changes, custom-field administration, team-membership changes, bulk updates, deletes, or other structural Asana administration. Route those requests to `z-advanced-asana-control` and obtain the required approval.
+Do not use for project setup, project briefs or status updates, workflow redesign, portfolio changes, timeline-wide changes, custom-field administration, team-membership changes, bulk updates, deletes, or other structural Asana administration. Route those requests to `z-advanced-asana-control`, which distinguishes already authorized bounded work from controlled changes needing confirmation. Routing alone does not require a second approval.
 
 Do not use ChatGPT's Asana plugin to impersonate an OpenClaw team agent or claim that agent performed the work. Do not use browser automation or direct REST when the approved runtime route is available.
 
@@ -98,12 +98,13 @@ For a team question, resolve the team first and pass its GID to the team-project
 | Safe | Read assigned tasks, comments, subtasks, attachments, dependencies, and task-level custom fields. Add concise evidence-based progress comments. | No extra approval after preflight. |
 | Normal | Update the assigned task, complete it when done criteria are met, upload relevant evidence, create a small follow-up subtask, or add a needed follower. | Do only when it directly supports the assigned task. |
 | Risky | Move one task between existing sections, update a task-level custom field, alter a dependency, reassign a task, or change one due date. | Require explicit task instruction, clear work necessity, or Jack's approval. |
-| Restricted | Bulk changes, deletes, project or portfolio changes, team membership, project status updates, project briefs, and custom-field administration. | Stop and route to `z-advanced-asana-control` with approval. |
+| Restricted | Bulk changes, deletes, project or portfolio changes, team membership, project status updates, project briefs, and custom-field administration. | Route to `z-advanced-asana-control`; apply its bounded/controlled approval rules. |
 
 When custom fields are required, enumerate the available fields first. Use field GIDs and enum-option GIDs. Never invent values or options.
 
 ## Execute the Assigned Work
 
+- Use `z-asana-procedures` when creating or repairing a task or follow-up subtask, including unassigned preparation, standalone instructions, order, and assign-last. Use `z-agent-communication` for human-facing descriptions and comments.
 - Add a short `Starting work` comment when beginning material work.
 - Save a compact `In progress` activity record when the selected method in [task memory](references/task-memory.md) requires and permits it. Save important progress, changed plans, and blockers when they occur.
 - Move or set the task to `In Progress` only when the project already uses that status and the change is within the approved action boundary.
