@@ -16,7 +16,7 @@ For assigned-task execution, read this skill once per new work session and verif
 
 Also use this Skill when an email or background job starts Asana work, or when someone asks what you did, why you did it, or what you are working on in Asana. Read this Skill in that run; a separate chat's earlier skill load does not count.
 
-Use `z-asana-procedures` for project/task setup, assignment readiness, execution checkpoints and review routing. Procedures coordinates the workflow; this control verifies authority and task actions.
+This skill owns doing assigned work through completion, including subtasks, review, progress records, and recovery after an interruption. Ordinary execution does not require `z-asana-procedures`. Use Procedures only when creating or repairing tasks, subtasks, or projects, including a small follow-up within an existing assignment. Use `z-advanced-asana-control` for project setup or wider structural and permission changes.
 
 ## Do Not Use This Skill
 
@@ -102,6 +102,21 @@ For a team question, resolve the team first and pass its GID to the team-project
 
 When custom fields are required, enumerate the available fields first. Use field GIDs and enum-option GIDs. Never invent values or options.
 
+## Finish the whole assignment
+
+An Asana notification identifies where to start or resume; it does not define the full assignment. Apply this rule whether work arrives by email, chat, or another approved route. It does not apply to unrelated email.
+
+- Open the notified task, its main-task context, recent decisions, and actual dependencies. If it belongs to a main assignment owned by this agent, read that assignment and all its required action subtasks, including any further pages of results. Use that owned assignment as the work list. Do not expand into a higher-level assignment owned by someone else.
+- Confirm which steps this agent is authorized to do. Owning a main task does not authorize taking over another person's work or approval. A section heading is not an action to complete. If only a subtask is assigned to this agent under someone else's main task, finish the assigned scope and make the required handoff; do not take over its siblings.
+- Check saved work and proof before starting. Continue an existing execution when available. Repeated notifications for the same owned assignment are not separate jobs. Do not start a competing worker or repeat verified work. If another execution is active, use the existing coordination route; these instructions do not create a software lock.
+- Work through every authorized, ready step in dependency order. Do the work, check the actual output, save its proof, complete that step, and read its status back. Then return to the work list and immediately start the next ready step. Do not end the assignment or wait for another email, prompt, or general approval merely because one subtask is done.
+- If a step cannot proceed, record the exact problem, saved work, next action, and person who can resolve it. Continue other authorized steps that do not depend on it. Do not bypass a required approval or dependency.
+- Keep the delivery owner on the main task during review. A submitted draft may wait for review while other independent work continues. Perform authorized corrections and checks when the review returns. Use [delivery checks](references/delivery.md) when review, handoff, or the required proof needs clarification.
+- Before ending, check the whole work list again. If authorized, ready work remains, continue. End only when the assigned result is verified, Jack asks to stop, or no remaining authorized work can safely proceed because of a concrete error, missing input, approval, or prerequisite. Save progress at meaningful steps, not only at the end. Do not impose a time limit, fixed number of steps, or automatic restart chain.
+- Complete this agent's main assignment only after all required subtasks, saved outputs, checks, and approvals are satisfied and verified. Do not close a higher-level task owned by someone else. Report whether the assignment is complete, waiting for a named input or approval, or stopped by a specific error. One finished step is partial progress.
+
+For an uncertain Asana write, reporting failure, or interrupted run, read [assignment recovery](references/assignment-recovery.md). Preserve progress and continue known independent work when safe; do not rerun finished work to repair reporting.
+
 ## Execute the Assigned Work
 
 - Use `z-asana-procedures` when creating or repairing a task or follow-up subtask, including unassigned preparation, standalone instructions, order, and assign-last. Use `z-agent-communication` for human-facing descriptions and comments.
@@ -121,7 +136,7 @@ In **Diagnose Mode**, follow Diagnose, Solution, Confirmation, Act. Investigate 
 
 ## Complete and Verify
 
-Before completing a task:
+Before completing a task (completing a subtask must return to the whole-assignment loop above):
 
 - Confirm the stated done criteria and check dependencies or follow-up work.
 - Add a final comment with the result and proof or relevant links.
