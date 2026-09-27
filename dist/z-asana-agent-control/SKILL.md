@@ -96,8 +96,8 @@ For a team question, resolve the team first and pass its GID to the team-project
 | Level | Allowed work | Approval rule |
 | --- | --- | --- |
 | Safe | Read assigned tasks, comments, subtasks, attachments, dependencies, and task-level custom fields. Add concise evidence-based progress comments. | No extra approval after preflight. |
-| Normal | Update the assigned task, complete it when done criteria are met, upload relevant evidence, create a small follow-up subtask, or add a needed follower. | Do only when it directly supports the assigned task. |
-| Risky | Move one task between existing sections, update a task-level custom field, alter a dependency, reassign a task, or change one due date. | Require explicit task instruction, clear work necessity, or Jack's approval. |
+| Normal | Update the assigned task, complete it when done criteria are met, upload relevant evidence, create a small follow-up subtask, or add a needed follower. The main-task owner may self-assign their own unassigned steps and plan their dates within the agreed scope and schedule. | Do only when it directly supports the assigned task; preserve other owners and fixed commitments. |
+| Risky | Move one task between existing sections, update a task-level custom field, alter a dependency, reassign someone else's task, or change a date outside routine owner planning. | Require explicit task instruction, clear work necessity, or Jack's approval. |
 | Restricted | Bulk changes, deletes, project or portfolio changes, team membership, project status updates, project briefs, and custom-field administration. | Route to `z-advanced-asana-control`; apply its bounded/controlled approval rules. |
 
 When custom fields are required, enumerate the available fields first. Use field GIDs and enum-option GIDs. Never invent values or options.
@@ -108,6 +108,8 @@ An Asana notification identifies where to start or resume; it does not define th
 
 - Open the notified task, its main-task context, recent decisions, and actual dependencies. If it belongs to a main assignment owned by this agent, read that assignment and all its required action subtasks, including any further pages of results. Use that owned assignment as the work list. Do not expand into a higher-level assignment owned by someone else.
 - Confirm which steps this agent is authorized to do. Owning a main task does not authorize taking over another person's work or approval. A section heading is not an action to complete. If only a subtask is assigned to this agent under someone else's main task, finish the assigned scope and make the required handoff; do not take over its siblings.
+- When the main task is assigned first, read its current instructions and linked project brief. Review the full required work list, then self-assign only your own unassigned action subtasks and plan sensible dates within the agreed schedule. Read changes back. Preserve fixed deadlines, genuine dependencies, and other people's review or specialist work. Do not assume unassigned children block release or wait for the builder to assign your own steps. Ask only about genuinely unclear responsibility or commitments.
+- Follow the current authorized release instruction. Treat older "prepared/not released" wording as historical when clearly superseded; correct stale current wording within scope or flag the exact conflict. Do not bypass a still-valid approval, access limit, or prerequisite.
 - Check saved work and proof before starting. Continue an existing execution when available. Repeated notifications for the same owned assignment are not separate jobs. Do not start a competing worker or repeat verified work. If another execution is active, use the existing coordination route; these instructions do not create a software lock.
 - Work through every authorized, ready step in dependency order. Do the work, check the actual output, save its proof, complete that step, and read its status back. Then return to the work list and immediately start the next ready step. Do not end the assignment or wait for another email, prompt, or general approval merely because one subtask is done.
 - If a step cannot proceed, record the exact problem, saved work, next action, and person who can resolve it. Continue other authorized steps that do not depend on it. Do not bypass a required approval or dependency.
@@ -119,11 +121,11 @@ For an uncertain Asana write, reporting failure, or interrupted run, read [assig
 
 ## Execute the Assigned Work
 
-- Use `z-asana-procedures` when creating or repairing a task or follow-up subtask, including unassigned preparation, standalone instructions, order, and assign-last. Use `z-agent-communication` for human-facing descriptions and comments.
+- Use `z-asana-procedures` when creating or repairing a task or follow-up subtask, including unassigned preparation, concise linked instructions, order, and main-task-first release. Routine self-assignment and dating of existing owner-managed steps follow this skill and do not require reloading the setup workflow. Use `z-agent-communication` for human-facing descriptions and comments.
 - Add a short `Starting work` comment when beginning material work.
 - Save a compact `In progress` activity record when the selected method in [task memory](references/task-memory.md) requires and permits it. Save important progress, changed plans, and blockers when they occur.
 - Move or set the task to `In Progress` only when the project already uses that status and the change is within the approved action boundary.
-- Keep comments concise, factual, and tied to the expected outcome.
+- Keep comments concise, factual, and tied to the expected outcome. Use the agreed project-stage checkpoint for shared result links, checks, unresolved items, and next owners. Identify one final result per assignment and label useful drafts; do not repeat the full project report on every subtask.
 - Use valid `html_notes` or `html_text` only when rich text is necessary.
 - For a reliable mention, add the person as a follower first, wait briefly for propagation, then use the MCP-supported Asana mention markup.
 - Attach relevant proof or output when it materially supports review. Do not use project-brief attachment or inline-image workflows under this Skill.
